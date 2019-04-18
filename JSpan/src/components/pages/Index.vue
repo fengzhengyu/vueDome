@@ -79,7 +79,7 @@
         <van-list
          
         >
-          <van-row gutter="20">
+          <van-row gutter="10">
             <van-col span="12" v-for="(item,index) in hotGoods" :key="index">
               <goodsInfo :goodsImage="item.photoUnify" :goodsName="item.goodsName" :goodsCompany="item.productCompany"></goodsInfo>
             </van-col>
@@ -93,6 +93,7 @@
 
 <script>
 import axios from "axios";
+import URL from '@/assets/js/serverApi.js'
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
@@ -141,7 +142,7 @@ export default {
   },
   created() {
     axios({
-      url: "http://www.ey99.com/ddyk/Api/Goods/selectGoodsIndex",
+      url: URL.getIndex,
       method: "get",
       params: {
         // page:3
@@ -223,6 +224,9 @@ export default {
 }
 .recommend-item img{
   height: 6rem;
+}
+.hot-goods{
+  overflow: hidden;
 }
 .hot-title{
   height: 1.8rem;
