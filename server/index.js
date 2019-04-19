@@ -3,21 +3,29 @@ const Koa = require('koa');
 
 const app = new Koa();
 const mongoose =require('mongoose');
+const bodyParser = require('koa-bodyparser');
+var cors = require('koa2-cors');
 const {connect,initSchemas} = require('./database/init.js');
+const Router = require('koa-router');
+
+// 
+app.use(bodyParser());
+app.use(cors());
+
+let user = require('./appApi/user.js')  
+let home = require('./appApi/home.js')  
+
+// 装载子路由
+let  router = new Router();
+router.use('/user',user.routes());
+router.use('/home',home.routes());
+// 加载路由中间键
+app.use(router.routes());
+app.use(router.allowedMethods());
 
 (async ()=>{
   await connect();
-  initSchemas();
-  const User = mongoose.model('User');
-  // console.log(User)
-  let oneUser = new User({username: 'fengheng4',password: '123456'})
-  oneUser.save().then(()=>{
-    console.log('插入成功')
-  })
-
-  // let user = await User.find({}).exec();
-
-  // console.log(user)
+  initSchemas(); //
 
 })()
 app.use(async (ctx)=> {
