@@ -70,18 +70,18 @@
       <div class="hot-title">热卖商品</div>
       <div class="hot-goods">
         <!-- 需要list 组件
-         v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="onLoad"
+         
         
          -->
         <van-list
-         
+         v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoadMore"
         >
           <van-row gutter="10">
             <van-col span="12" v-for="(item,index) in hotGoods" :key="index">
-              <goodsInfo :goodsImage="item.photoUnify" :goodsName="item.goodsName" :goodsCompany="item.productCompany"></goodsInfo>
+              <goodsInfo :goodsImage="item.PICTURE_COMPERSS_PATH" :goodsName="item.NAME" :goodsPrice="item.PRESENT_PRICE" :goodsId="item.ID"></goodsInfo>
             </van-col>
           </van-row>
         </van-list>
@@ -136,30 +136,72 @@ export default {
       },
       floorData: [],
       floorName: [],
-      hotGoods : []
+      hotGoods : [],
+      page: 1,
+      loading: false,
+      finished: false,
      
   };
   },
   created() {
-    axios({
-      url: URL.getIndex,
-      method: "get",
-      params: {
-        // page:3
-      }
-    }).then(response => {
-      var res = response.data;
-      console.log(res);
-      if (res.flag == "success") {
-        this.categorg = res.data;
-        this.recommend = res.adGoodsData;
-        this.floorData = res.data[0].typeData;
-        this.floorName = res.data;
+    this.getData();
+    // this.getHotGoodsList()
+  },
+  methods:{
+    getData(){
+       axios({
+        url: URL.getIndex,
+        method: "get",
+        params: {
+          // page:3
+        }
+      }).then(response => {
+        var res = response.data;
+        // console.log(res);
+        if (res.flag == "success") {
+          this.categorg = res.data;
+          this.recommend = res.adGoodsData;
+          this.floorData = res.data[0].typeData;
+          this.floorName = res.data;
+        
+         
+        
+        }
+      });
+    },
+    getHotGoodsList(flag){
+       axios({
+        url: URL.hotGoodsList,
+        method: "post",
+        data: {
+          page:this.page
+        }
+      }).then(response => {
        
-        this.hotGoods = res.data[0].typeData
-      
-      }
-    });
+        let res = response.data;
+          // console.log( res )
+        if(res.code == 200&& res.message.length>0){
+          this.hotGoods = this.hotGoods.concat(res.message);
+          this.loading =false;
+          this.page++;
+          if(this.page>=Math.ceil(res.count/10)){
+
+            this.finished = true;
+          }
+        }
+            
+         
+         
+         
+      })
+    },
+    // 加载更多
+    onLoadMore(){
+   
+      setTimeout(()=>{
+         this.getHotGoodsList()
+      },500)
+    }
   }
 };
 </script>
