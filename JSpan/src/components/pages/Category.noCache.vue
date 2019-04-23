@@ -84,8 +84,9 @@ export default {
   created() {
     // activated
     this.categpryIndex = this.$route.query.id || 0
-    this.getCategroyList();
-    console.log('激活了')
+  
+     console.log( this.categpryIndex)
+      this.getCategroyList();
   },
   mounted() {
     let width =
@@ -95,27 +96,16 @@ export default {
   },
   watch: {
     '$route' (to, from){
-         console.log(to.meta)
       if(to.meta.isUseCache){
-        //  this.categpryIndex = this.$route.query.id 
-          document.getElementById("list-div").scrollTop = to.meta.scrollTop ;
-          // to.meta.scrollTop = 0;
+          document.getElementById("list-div").scrollTop = to.meta.scrollTop;
+          to.meta.scrollTop = 0;
      
-          // to.meta.isUseCache= false;
-           console.log('no zou')
+          to.meta.isUseCache= false
       }
-     
-     
-      if(this.$route.query && !to.meta.isUseCache && to.name=='category'){
-        console.log('zou')
-        console.log(this.categpryIndex )
+      if(this.$route.query){
            // console.log(this.$route.query)
-            this.categpryIndex = this.$route.query.id;
-            this.goodsList= [];
-            this.page = 1;
-            this.loading = true;
-            this.finished = false;
-            this.getCategroyList();
+          
+           this.getCategroyList();
       }
     }
   },
@@ -129,19 +119,16 @@ export default {
     },
     // 获取大分类
     getCategroyList() {
-      
+      console.log('zou')
       axios({
         url: URL.categoryList,
         method: "get"
       }).then(response => {
         let res = response.data;
         if (res.code == 200) {
-            this.category = res.message;
-            console.log(this.categpryIndex);
-            console.log(this.category);
-
-  
-          this.getCategorySubList(this.category[this.categpryIndex].ID); //获取被选中的大类id 给小类用 this.category[this.categpryIndex].ID
+          this.category = res.message;
+ console.log(this.category[this.categpryIndex].ID)
+          this.getCategorySubList(this.category[this.categpryIndex].ID);
         }
         //  console.log(res)
       });
@@ -153,10 +140,10 @@ export default {
       this.loading = true;
       this.finished = false;
       this.goodsList = [];
-      // console.log(categoryId)
-      this.getCategorySubList(categoryId); //获取小类数据
+      // // console.log(categoryId)
+      // this.getCategorySubList(categoryId); //获取小类数据
 
-        // this.$router.push({name:'category',query:{id:index}})
+        this.$router.push({name:'category',query:{id:index}})
     },
     // 获取小分类
     getCategorySubList(categoryId) {
@@ -170,8 +157,7 @@ export default {
         // console.log(response)
         let res = response.data;
         this.categorySub = res.message;
-        this.categorySubId = this.categorySub[0].ID; //小类id
-
+        this.categorySubId = this.categorySub[0].ID;
         this.active=0
        if(this.loading){
          this.onLoadMore();
@@ -182,7 +168,7 @@ export default {
     },
     // 点击小分类获取goodsList
     onClickCategorySub(index, title) {
-      this.categorySubId = this.categorySub[index].ID; //获取点到的小类id
+      this.categorySubId = this.categorySub[index].ID;
       this.goodsList = [];
       this.finished = false;
       this.loading = true;
@@ -199,7 +185,7 @@ export default {
         url: URL.getCategorySubData,
         method: "post",
         data: {
-          categorySubId: this.categorySubId, //小类id
+          categorySubId: this.categorySubId,
           page: this.page
         }
       }).then(response => {
@@ -252,12 +238,6 @@ export default {
         this.$router.push({name:'goods',params:{goodsId:id}})
     }
     
-
-  },
-  deactivated(){
-            // console.log(this.categpryIndex);
-            // console.log(this.category);
-            // this.getCategroyList() 
 
   },
    beforeRouteLeave(to,from,next){

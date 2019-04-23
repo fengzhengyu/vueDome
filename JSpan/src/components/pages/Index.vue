@@ -24,10 +24,10 @@
     </div>
 
     <div class="type-bar">
-      <div v-for="(item,index) in categorg" :key="index" class="type-item">
+      <div v-for="(item,index) in categorg" :key="index" class="type-item" @click="goCategory(index)">
         
-        <img v-lazy="categorgimg"  width=" 90%">
-        <span>{{ item.goodsParentsName.substring(0,4) }}</span>
+        <img v-lazy="item.IMAGE"  width=" 90%">
+        <span>{{ item.MALL_CATEGORY_NAME }}</span>
       </div>
     </div>
 
@@ -74,7 +74,7 @@
         
          -->
         <van-list
-         v-model="loading"
+          v-model="loading"
           :finished="finished"
           finished-text="没有更多了"
           @load="onLoadMore"
@@ -145,9 +145,26 @@ export default {
   },
   created() {
     this.getData();
-    // this.getHotGoodsList()
+    this.getCategroyList()
   },
   methods:{
+     getCategroyList() {
+      axios({
+        url: URL.categoryList,
+        method: "get"
+      }).then(response => {
+        let res = response.data;
+        if (res.code == 200) {
+           this.categorg = res.message;
+   
+          
+        }
+         console.log(res)
+      });
+    },
+    goCategory(id){
+        this.$router.push({name:'category',query:{id:id}})
+    },
     getData(){
        axios({
         url: URL.getIndex,
@@ -159,7 +176,7 @@ export default {
         var res = response.data;
         // console.log(res);
         if (res.flag == "success") {
-          this.categorg = res.data;
+         
           this.recommend = res.adGoodsData;
           this.floorData = res.data[0].typeData;
           this.floorName = res.data;
@@ -180,7 +197,7 @@ export default {
        
         let res = response.data;
           // console.log( res )
-        if(res.code == 200&& res.message.length>0){
+        if(res.code == 200 && res.message.length>0){
           this.hotGoods = this.hotGoods.concat(res.message);
           this.loading =false;
           this.page++;

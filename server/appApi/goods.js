@@ -155,7 +155,7 @@ router.post('/getCategorySubList', async (ctx) => {
     let result = await CategorySub.find({
       MALL_CATEGORY_ID: categoryId
     }).exec();
-    console.log(categoryId)
+   
     ctx.body = {
       code: 200,
       message: result
@@ -172,6 +172,7 @@ router.post('/getCategorySubList', async (ctx) => {
 router.post('/getCategorySubData', async (ctx) => {
   try {
     let categorySubId  = ctx.request.body.categorySubId ;
+   
     let page = ctx.request.body.page , //当前页数
     num = ctx.request.body.num || 10;
     let start = (page-1)*num  //开始位置
@@ -179,6 +180,10 @@ router.post('/getCategorySubData', async (ctx) => {
     const Goods = mongoose.model('Good')
     let result = await Goods.find({SUB_ID:categorySubId})
     .skip(start).limit(num).exec()
+
+    
+    // console.log(result )
+  
     ctx.body={code:200,message:result}
     
   } catch (error) {

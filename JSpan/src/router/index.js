@@ -8,11 +8,17 @@ import Category from '@/components/pages/Category.vue'
 Vue.use(Router)
 
 export default new Router({
+  // mode: 'history',
+  // base: '/',
   routes: [
+   
     {
       path: '/',
       name: 'home',
-      component: Index
+      component: Index,
+      meta: {
+        keepAlive: true
+      }
     },
     {
       path: '/register',
@@ -25,15 +31,28 @@ export default new Router({
       component: Login
     },
      {
-      path: '/goods',
+      path: '/goods/:goodsId',
       name: 'goods',
       component: Goods
     },
     {
       path: '/category',
       name: 'category',
-      component: Category
+      component: Category,
+      meta: {
+        keepAlive: true
+      }
     },
     
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+   
+   
+    if (savedPosition) {
+    
+      return savedPosition;
+    } else {
+       return { x: 0, y: 0 }
+    }
+  }
 })
