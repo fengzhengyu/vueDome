@@ -5,6 +5,7 @@ import Register from '@/components/pages/Register.vue'
 import Login from '@/components/pages/Login.vue'
 import Goods from '@/components/pages/Goods.vue'
 import Category from '@/components/pages/Category.vue'
+import Cart from '@/components/pages/Cart.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -42,6 +43,14 @@ export default new Router({
       meta: {
         keepAlive: true
       }
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: Cart,
+      // meta: {
+      //   keepAlive: true
+      // }
     },
     
   ],

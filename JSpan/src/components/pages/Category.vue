@@ -95,20 +95,17 @@ export default {
   },
   watch: {
     '$route' (to, from){
-         console.log(to.meta)
+        //  console.log(to.meta)
+        // 从详情页回来
       if(to.meta.isUseCache){
-        //  this.categpryIndex = this.$route.query.id 
           document.getElementById("list-div").scrollTop = to.meta.scrollTop ;
-          // to.meta.scrollTop = 0;
-     
-          // to.meta.isUseCache= false;
-           console.log('no zou')
+          
       }
      
-     
+      // 胸首页点击分类进来
       if(this.$route.query && !to.meta.isUseCache && to.name=='category'){
-        console.log('zou')
-        console.log(this.categpryIndex )
+        // console.log('zou')
+        // console.log(this.categpryIndex )
            // console.log(this.$route.query)
             this.categpryIndex = this.$route.query.id;
             this.goodsList= [];
@@ -137,8 +134,8 @@ export default {
         let res = response.data;
         if (res.code == 200) {
             this.category = res.message;
-            console.log(this.categpryIndex);
-            console.log(this.category);
+            // console.log(this.categpryIndex);
+            // console.log(this.category);
 
   
           this.getCategorySubList(this.category[this.categpryIndex].ID); //获取被选中的大类id 给小类用 this.category[this.categpryIndex].ID
@@ -246,9 +243,9 @@ export default {
       }, 500);
     },
     goDetail(id){
-      // 
+      // 去详情页  记录浏览的 滚动位置
       this.scroll =  document.getElementById("list-div").scrollTop;
-        console.log(this.scroll)
+        // console.log(this.scroll)
         this.$router.push({name:'goods',params:{goodsId:id}})
     }
     
@@ -261,7 +258,11 @@ export default {
 
   },
    beforeRouteLeave(to,from,next){
-   
+    //  console.log(from )
+    //  console.log(to )
+     if(to.name =='home'){ //返回首页 点击分类 进入走watch 刷新数据
+       from.meta.isUseCache = false;
+     }
     from.meta.scrollTop = this.scroll
     next()
   }

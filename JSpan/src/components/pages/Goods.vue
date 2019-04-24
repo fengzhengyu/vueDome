@@ -16,6 +16,14 @@
         <van-tab title="评论">评论制作中</van-tab>
       </van-tabs>
     </div>
+      <div class="goods-bottom">
+            <div>
+                <van-button size="large" type="primary" @click="addGoodsToCart">加入购物车</van-button>
+            </div>
+            <div>
+                <van-button size="large" type="danger">直接购买</van-button>
+            </div>
+        </div>
   </div>
 </template>
 
@@ -51,7 +59,33 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    addGoodsToCart(){
+      // 取出本地 存贮的商品
+
+      let cartInfo = localStorage.cartInfo? JSON.parse(localStorage.cartInfo): [];
+      // 是否有该商品
+      let  isHaveGoods = cartInfo.find(cart=>cart.goodsId == this.goodsId);
+
+      // 如果没有
+      if(!isHaveGoods){
+        let newGoodsInfo = {
+          goodsId: this.goodsId,
+          name: this.goodsItem.NAME,
+          price: this.goodsItem.PRESENT_PRICE,
+          image: this.goodsItem.IMAGE1,
+          num: 1
+        }
+        cartInfo.push(newGoodsInfo);
+        localStorage.cartInfo= JSON.stringify( cartInfo);
+        this.$toast.success('添加成功！')
+          this.$router.push({name:'cart'})
+      }else{
+         this.$toast.success('购物车已存！')
+      }
     }
+
+
   },
   beforeRouteLeave(to, from, next) {
     if (to.name == "category") {
