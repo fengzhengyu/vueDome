@@ -17,17 +17,20 @@
         
       </b-row>
     </b-container>
+    <Test></Test>
   </div>
 </template>
 
 <script>
 import Header from './components/Header.vue'
 import QuestionBox from './components/QuestionBox.vue'
+import Test from './components/Test.vue'
 export default {
   name: 'App',
    components: {
      Header,
-     QuestionBox
+     QuestionBox,
+     Test
   },
   data(){
     return {
@@ -57,6 +60,8 @@ export default {
     }
   },
   created(){
+
+
     fetch('https://opentdb.com/api.php?amount=10&category=27&type=multiple', {
       method: 'get'
     })

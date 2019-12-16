@@ -85,7 +85,7 @@ export default {
     // activated
     this.categpryIndex = this.$route.query.id || 0
     this.getCategroyList();
-    console.log('激活了')
+    // console.log('激活了')
   },
   mounted() {
     let width =
